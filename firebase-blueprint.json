@@ -1,0 +1,41 @@
+{
+  "entities": {
+    "Competition": {
+      "title": "Competition",
+      "description": "A game or competition being tracked.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "description": "Name of the competition (e.g. Valorant Ranked)" },
+        "wins": { "type": "number", "description": "Total wins" },
+        "losses": { "type": "number", "description": "Total losses" },
+        "winRate": { "type": "number", "description": "Calculated win rate percentage" },
+        "userId": { "type": "string", "description": "Owner of the record" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "wins", "losses", "userId"]
+    },
+    "Match": {
+      "title": "Match",
+      "description": "An individual match result.",
+      "type": "object",
+      "properties": {
+        "competitionId": { "type": "string", "description": "ID of the competition" },
+        "result": { "type": "string", "enum": ["win", "loss"] },
+        "userId": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" }
+      },
+      "required": ["competitionId", "result", "userId", "timestamp"]
+    }
+  },
+  "firestore": {
+    "/competitions/{competitionId}": {
+      "schema": "Competition",
+      "description": "User competitions"
+    },
+    "/matches/{matchId}": {
+      "schema": "Match",
+      "description": "Match history"
+    }
+  }
+}

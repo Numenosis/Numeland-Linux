@@ -1,0 +1,6 @@
+{
+  "name": "Numeland",
+  "description": "A moody, monochrome competition tracker. Track wins, losses, and win rates with real-time Firebase integration.",
+  "requestFramePermissions": [],
+  "majorCapabilities": []
+}

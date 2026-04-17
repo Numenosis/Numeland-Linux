@@ -1,0 +1,40 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper Functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+    function isDocOwner() {
+      return isAuthenticated() && request.auth.uid == resource.data.userId;
+    }
+    function isValidCompetition(data) {
+      return data.name is string && data.name.size() > 0 && data.name.size() < 100 &&
+             data.wins is number && data.wins >= 0 &&
+             data.losses is number && data.losses >= 0 &&
+             data.userId == request.auth.uid;
+    }
+    function isValidMatch(data) {
+      return data.competitionId is string &&
+             data.result in ['win', 'loss'] &&
+             data.userId == request.auth.uid;
+    }
+
+    match /competitions/{competitionId} {
+      allow read: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow create: if isAuthenticated() && isValidCompetition(request.resource.data);
+      allow update: if isAuthenticated() && isDocOwner() && isValidCompetition(request.resource.data);
+      allow delete: if isAuthenticated() && isDocOwner();
+    }
+
+    match /matches/{matchId} {
+      allow read: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow create: if isAuthenticated() && isValidMatch(request.resource.data);
+      allow update: if false; // Matches are immutable
+      allow delete: if isAuthenticated() && isDocOwner();
+    }
+  }
+}

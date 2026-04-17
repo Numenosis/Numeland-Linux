@@ -1,0 +1,38 @@
+CHECKLIST DE REQUERIMIENTOS - NUMELAND (WINRATE TRACKER)
+
+1. ESTÁNDARES DE CODIFICACIÓN Y ARQUITECTURA
+[ ] TypeScript Estricto: Uso de tipado estático para prevenir errores en tiempo de ejecución (interfaces para Competitions y Matches).
+[ ] React Funcional: Uso exclusivo de componentes funcionales y Hooks (useState, useEffect).
+[ ] Modularidad: Separación clara de responsabilidades (UI en `components/`, configuración en `lib/firebase.ts`).
+[ ] Estilos Mantenibles: Uso de Tailwind CSS con utilidades personalizadas (@utility) para mantener el CSS limpio y escalable.
+[ ] Convenciones de Nomenclatura: PascalCase para componentes (Dashboard, Auth) y camelCase para funciones y variables (handleCredentialsLogin, globalWinRate).
+
+2. EFICIENCIA Y RENDIMIENTO
+[ ] Tiempo Real Optimizado: Uso de `onSnapshot` de Firebase para sincronización de datos en tiempo real sin necesidad de recargar la página (polling).
+[ ] Minimización de Re-renders: Estructura de estado local optimizada para evitar renderizados innecesarios en la lista de historial.
+[ ] Transiciones Ligeras: Uso de `motion/react` para animaciones de entrada y salida sin sobrecargar el DOM.
+[ ] Operaciones Atómicas: Uso de `increment()` de Firestore para actualizar contadores de victorias/derrotas de forma eficiente y segura en la base de datos.
+
+3. SEGURIDAD
+[ ] Autenticación Restringida: Acceso limitado mediante Firebase Auth (Email/Password) validando credenciales específicas (admin/admin).
+[ ] Reglas de Firestore (Security Rules): 
+    - Default Deny: Todo bloqueado por defecto.
+    - Verificación de Propiedad: Los usuarios solo pueden leer, modificar y eliminar los documentos donde `userId` coincida con su `request.auth.uid`.
+    - Inmutabilidad: El historial de partidas (Matches) es de solo lectura/creación, no se puede alterar una vez registrado.
+[ ] Validación Frontend: Prevención de envíos vacíos (ej. nombre de competencia en blanco) antes de consultar la base de datos.
+[ ] Manejo de Errores Seguro: Mensajes de error controlados que no exponen información sensible del stack trace al usuario final.
+
+4. EXPERIENCIA DE USUARIO (UX/UI)
+[ ] Diseño "Bento Grid": Interfaz estructurada en tarjetas modulares para una visualización de datos clara y jerárquica.
+[ ] Estética "The Neighbourhood": Paleta monocromática (negro, blanco, grises oscuros), tipografía técnica (Space Grotesk) y alto contraste.
+[ ] Feedback Visual: 
+    - Botones deshabilitados y texto de "Authenticating..." durante el login.
+    - Mensajes de error claros si fallan las credenciales.
+[ ] Diseño Responsivo: Adaptabilidad del layout de cuadrícula para pantallas de escritorio y dispositivos móviles.
+
+5. FUNCIONALIDAD CORE
+[ ] Gestión de Sesión: Login con credenciales personalizadas y persistencia de sesión.
+[ ] CRUD de Competencias: Capacidad de crear nuevas pistas (tracks) y eliminarlas.
+[ ] Registro de Partidas: Botones de acción rápida para registrar "Win" o "Loss".
+[ ] Cálculo de WinRate: Cálculo matemático en tiempo real del porcentaje de victorias tanto a nivel global como individual por competencia.
+[ ] Historial de Actividad: Registro cronológico de los últimos resultados obtenidos.
