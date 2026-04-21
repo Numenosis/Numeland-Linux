@@ -15,12 +15,15 @@ service cloud.firestore {
       return data.name is string && data.name.size() > 0 && data.name.size() < 100 &&
              data.wins is number && data.wins >= 0 &&
              data.losses is number && data.losses >= 0 &&
-             data.userId == request.auth.uid;
+             data.userId == request.auth.uid &&
+             (!('medal' in data) || data.medal in ['gold', 'silver', 'bronze', 'copper', 'none']);
     }
     function isValidMatch(data) {
       return data.competitionId is string &&
              data.result in ['win', 'loss'] &&
-             data.userId == request.auth.uid;
+             data.userId == request.auth.uid &&
+             (!('opponent' in data) || (data.opponent is string && data.opponent.size() <= 100)) &&
+             (!('round' in data) || (data.round is string && data.round.size() <= 50));
     }
 
     match /competitions/{competitionId} {
